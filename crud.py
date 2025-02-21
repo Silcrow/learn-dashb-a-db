@@ -1,5 +1,4 @@
-# crud.py
-from models import User, Product, Order
+from models import User, Product, Order, OrderItem
 from sqlalchemy.orm import Session
 
 
@@ -21,8 +20,8 @@ def get_all_users(session: Session) -> list:
 
 
 # Product CRUD operations
-def create_product(session: Session, name: str, price: int, user_id: int) -> Product:
-    product = Product(name=name, price=price, user_id=user_id)
+def create_product(session: Session, name: str, price: float, description: str, stock_quantity: int) -> Product:
+    product = Product(name=name, price=price, description=description, stock_quantity=stock_quantity)
     session.add(product)
     session.commit()
     session.refresh(product)
@@ -34,12 +33,15 @@ def get_product_by_id(session: Session, product_id: int) -> Product:
 
 
 def get_products_by_user(session: Session, user_id: int) -> list:
-    return session.query(Product).filter(Product.user_id == user_id).all()
+    # Here we fetch products based on orders of the user, not directly linked to users
+    orders = session.query(Order).filter(Order.user_id == user_id).all()
+    product_ids = set(item.product_id for order in orders for item in order.order_items)
+    return session.query(Product).filter(Product.id.in_(product_ids)).all()
 
 
 # Order CRUD operations
-def create_order(session: Session, order_date: str, total_price: int, user_id: int) -> Order:
-    order = Order(order_date=order_date, total_price=total_price, user_id=user_id)
+def create_order(session: Session, user_id: int) -> Order:
+    order = Order(user_id=user_id)
     session.add(order)
     session.commit()
     session.refresh(order)
@@ -54,26 +56,14 @@ def get_orders_by_user(session: Session, user_id: int) -> list:
     return session.query(Order).filter(Order.user_id == user_id).all()
 
 
-# crud.py
-def fetch_sample_data(session: Session, limit: int = 5):
-    # Fetch a limited number of users
-    users = session.query(User).limit(limit).all()
-    print("Users:")
-    for user in users:
-        print(f"User ID: {user.id}, Username: {user.username}, Email: {user.email}")
+# OrderItem CRUD operations
+def create_order_item(session: Session, order_id: int, product_id: int, quantity: int, price: float) -> OrderItem:
+    order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=quantity, price=price)
+    session.add(order_item)
+    session.commit()
+    session.refresh(order_item)
+    return order_item
 
-    # Fetch a limited number of products for the first user (if exists)
-    if users:
-        first_user = users[0]
-        products = session.query(Product).filter(Product.user_id == first_user.id).limit(limit).all()
-        print(f"\nProducts of user {first_user.username}:")
-        for product in products:
-            print(f"Product ID: {product.id}, Name: {product.name}, Price: {product.price}")
 
-    # Fetch a limited number of orders for the first user (if exists)
-    if users:
-        first_user = users[0]
-        orders = session.query(Order).filter(Order.user_id == first_user.id).limit(limit).all()
-        print(f"\nOrders of user {first_user.username}:")
-        for order in orders:
-            print(f"Order ID: {order.id}, Date: {order.order_date}, Total Price: {order.total_price}")
+def get_order_items_by_order(session: Session, order_id: int) -> list:
+    return session.query(OrderItem).filter(OrderItem.order_id == order_id).all()

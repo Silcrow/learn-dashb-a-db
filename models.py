@@ -2,7 +2,7 @@
 import pendulum
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
-from sqlalchemy.orm import relationship, validates
+from sqlalchemy.orm import relationship
 from database import Base
 
 
