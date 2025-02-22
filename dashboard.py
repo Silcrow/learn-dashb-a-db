@@ -3,8 +3,9 @@ from dotenv import load_dotenv
 import dash
 from dash import dcc, html
 import plotly.express as px
+from sqlalchemy import func
 from database import SessionLocal
-from models import User, Order
+from models import User, Order, OrderItem
 import pandas as pd
 
 # Load environment variables from .env file
@@ -23,20 +24,22 @@ app = dash.Dash(__name__)
 app.secret_key = SECRET_KEY
 
 
-# Helper function to query the database for users and their orders
-def get_user_orders():
+# Helper function to query the database for total order costs
+def get_order_costs():
     with SessionLocal() as session:
-        # Query users and their corresponding orders
-        orders = session.query(Order.user_id, User.username, User.email, Order.id).join(User).all()
-        return orders
+        # Query the total cost per order (sum of quantity * price for each item)
+        results = session.query(
+            Order.id,  # Order ID
+            func.sum(OrderItem.quantity * OrderItem.price).label('total_cost')  # Sum the cost of each item in the order
+        ).join(OrderItem).group_by(Order.id).all()  # Join with OrderItem and group by Order ID
+        return results
 
 
 # Convert query results to DataFrame for Dash
 def orders_to_df(orders):
-    # Group by User and count the number of orders for each user
-    data = pd.DataFrame(orders, columns=["User ID", "Name", "Email", "Order ID"])
-    user_order_count = data.groupby(["User ID", "Name"]).size().reset_index(name="Order Count")
-    return user_order_count
+    # Convert the results to a DataFrame
+    data = pd.DataFrame(orders, columns=["Order ID", "Total Cost"])
+    return data
 
 
 # Layout of the Dash app
@@ -50,13 +53,13 @@ app.layout = html.Div([
 
 # Function to create the orders chart
 def update_table():
-    # Get user orders data and convert it to a DataFrame
-    orders = get_user_orders()
+    # Get the total costs of orders
+    orders = get_order_costs()
     df = orders_to_df(orders)
 
-    # Create a bar chart showing the number of orders for each user
+    # Create a bar chart showing the total cost for each order
     return html.Div([
-        dcc.Graph(figure=px.bar(df, x="Name", y="Order Count", title="Orders per User"))  # Bar chart for orders by user
+        dcc.Graph(figure=px.bar(df, x="Order ID", y="Total Cost", title="Total Order Costs"))  # Bar chart for total order cost
     ])
 
 

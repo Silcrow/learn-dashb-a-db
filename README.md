@@ -1,7 +1,67 @@
 # learn-dashb-a-db
-Run PostgreSQL in a docker container and query it into a dashboard with python.
+Run PostgreSQL in a Docker container and query it into a dashboard with Python.
 
-Dashboard design
+## Design
+- **Input:** Data is inserted into the database via CLI or RPA equivalents.
+- **Output:** A Dash dashboard for data visualization, with minimal to no API endpoints.
+
+## Modular Architecture
+This setup is akin to building a WarCraft or StarCraft base:
+
+This project represents a **Level 1 resource depot**—a standalone DB unit with a built-in dashboard and minimal CLI input.  
+To build more specialized or complex data depots, you can fork this project and expand upon it.
+
+**Separate projects that can interface with the depot:**
+- Advanced CLI or other manual input tools
+- Dedicated dashboard apps (including ones that aggregate multiple DBs)
+- RPA bots or automated data-gathering workers
+- API layers for online access
+- Frontend (FE) that connects to any API, turning it into a full-stack setup—but links can change anytime.
+
+## Galactic Formics Hive Metaphor
+1. **Hive Queen (me):** A singular entity guiding the hive's expansion. The hive grows through replication and evolution of units.
+2. **The Nest Planet:**  
+   - **Pollen Depots (DB):** Stores pollen (data), with built-in honey refining (dashboard and analytics) for that depot's pollen.  
+   - **Refinery (dedicated dashboard and analytics):** Refines honey more robustly, often aggregating pollen from multiple depots.  
+   - **Queen Control Panels:** Specialized interfaces for manual management of pollen depots (admin tools, query builders, etc.).  
+3. **Cyberspace Units:**  
+   - **Barracks (bots):** Hatches squads of formics. They can be scouts, gatherers, web crawlers, IoT sensors, etc.  
+   - **StarGates (API):** Pollen transporters floating in cyberspace, connecting different units across the hive and beyond.  
+   - **Outposts (FE or CURL):** Outpost units interact with other planets and outposts but never the hive.
+     - **CURL (Formic units):** Formic-Formic drones  
+     - **Envoys (FE):** Formic-Terran drones
+
+## To the Devs
+- Whenever you make schema changes, don't forget to modify the DAO (Data Access Object) and CRUD (Create, Read, Update, Delete) operations accordingly.
+- The key technologies used here are: **PostgreSQL, SQLAlchemy, Alembic, and Dash**.
+
+## Installation
+1. **Clone this repo:**
+```bash
+git clone https://github.com/your-username/wild-rift-dashboard.git
+cd wild-rift-dashboard
+```
+2. Create and activate a virtual environment:
+
+```shell
+python3 -m venv venv
+source venv/bin/activate # on Mac
+```
+3. Install dependencies:
+```shell
+pip install -r requirements.txt
+```
+Create a `.env` file with:
+```ini
+SECRET_KEY=<your-secret-key>
+DB_URL=<your-database-url>
+```
+Run the app:
+```shell
+python app.py
+```
+
+# Ongoing Dashboard design
 - top paying customers
 - [ ] top selling products
 - [ ] what else?
