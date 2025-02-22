@@ -1,5 +1,5 @@
-from models import User, Product, Order, OrderItem
 from sqlalchemy.orm import Session
+from .models import User, Product, Order, OrderItem
 
 
 # User CRUD operations

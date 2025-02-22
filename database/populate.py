@@ -2,9 +2,11 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from faker import Faker
 import random
-from dao import UserDAO, ProductDAO, OrderDAO, OrderItemDAO  # Import your DAO classes
-from database import SessionLocal
-from models import User, Product, Order, OrderItem
+
+# Import DAO classes
+from .dao import UserDAO, OrderDAO, OrderItemDAO
+from .models import Product
+from .database import SessionLocal
 
 fake = Faker()
 

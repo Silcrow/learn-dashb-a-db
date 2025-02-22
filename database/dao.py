@@ -1,10 +1,10 @@
-from crud import (
+from .crud import (
     create_user, get_user_by_id, get_all_users,
     create_product, get_product_by_id, get_products_by_user,
     create_order, get_order_by_id, get_orders_by_user,
     create_order_item, get_order_items_by_order
 )
-from models import User, Product, Order
+from .models import User, Product, Order
 
 
 class UserDAO:

@@ -1,7 +1,7 @@
 # learn-dashb-a-db
-Run PostgreSQL in a Docker container and query it into a dashboard with Python.
+Intent: Run PostgreSQL in a Docker container and query it into a dashboard with Python.
 
-## Design
+## Conception
 - **Input:** Data is inserted into the database via CLI or RPA equivalents.
 - **Output:** A Dash dashboard for data visualization, with minimal to no API endpoints.
 
@@ -27,13 +27,37 @@ To build more specialized or complex data depots, you can fork this project and 
 3. **Cyberspace Units:**  
    - **Barracks (bots):** Hatches squads of formics. They can be scouts, gatherers, web crawlers, IoT sensors, etc.  
    - **StarGates (API):** Pollen transporters floating in cyberspace, connecting different units across the hive and beyond.  
-   - **Outposts (FE or CURL):** Outpost units interact with other planets and outposts but never the hive.
-     - **CURL (Formic units):** Formic-Formic drones  
-     - **Envoys (FE):** Formic-Terran drones
+   - **Outposts (FE or CURL):** Outpost units interact with other planets (e.g. Terrans) and outposts but never the hive.
 
-## To the Devs
+## Dev Guide
 - Whenever you make schema changes, don't forget to modify the DAO (Data Access Object) and CRUD (Create, Read, Update, Delete) operations accordingly.
 - The key technologies used here are: **PostgreSQL, SQLAlchemy, Alembic, and Dash**.
+
+### File Structure Explained
+This project consists of **three main components**:
+
+1. **`app.py` (Main Entry Point)**
+   - Initializes the **Dash web application**.
+   - Starts the **data-fetching logic**.
+   - Uses **multi-threading** to keep the dashboard running while executing database queries.
+
+2. **`dashboard/` (Dash App & Visualizations)**
+   - `dashboard.py` → The main **Dash application** logic.
+   - `charts.py` → Defines **graphs and visual elements**.
+   - `queries.py` → Handles **data queries** from the database.
+   - This modular approach keeps `dashboard.py` clean and efficient.
+
+3. **`database/` (Database Management)**
+   - `database.py` → Sets up the **SQLAlchemy engine & session**.
+   - `models.py` → Defines **database models**.
+   - `dao.py` → Contains **Data Access Objects (DAO)** for structured queries.
+   - `crud.py` → Implements **basic CRUD operations**.
+   - `populate.py` → Populates the database with **sample data**.
+
+### **How They Work Together**
+- `app.py` **imports** both `database/` (for querying) and `dashboard/` (for visualization).
+- The **Dash app (`dashboard/`) fetches data** from `database/` via DAO queries.
+- `database/` handles **data retrieval, updates, and processing**.
 
 ## Installation
 1. **Clone this repo:**
