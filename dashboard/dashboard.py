@@ -19,7 +19,3 @@ app.layout = html.Div([
     html.H1("Wild Rift Orders Dashboard"),
     html.Div(id="table-container", children=create_order_chart())  # Calls chart function
 ])
-
-# Run server
-if __name__ == "__main__":
-    app.run_server(debug=True)

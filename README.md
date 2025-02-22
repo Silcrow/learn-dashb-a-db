@@ -85,7 +85,18 @@ Run the app:
 python app.py
 ```
 
+## To run scripts inside packages
+To run each `populate.py`'s functions:
+`python -m database.populate wipe_db`
+`python -m database.populate populate_fake_products`
+`python -m database.populate populate_db`
+To run `dashboard.py` script alone:
+`python -m dashboard.dashboard`
+
 # Ongoing Dashboard design
 - top paying customers
 - [ ] top selling products
 - [ ] what else?
+
+- [ ] You can run a script from the CLI as a package, so maybe no need Typer CLI.
+Just make a "control panel" script package.
