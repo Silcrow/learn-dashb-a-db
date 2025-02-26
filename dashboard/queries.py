@@ -1,19 +1,23 @@
 from sqlalchemy import func
 import pandas as pd
 from database.database import SessionLocal
-from database.models import Order, OrderItem
+from database.models import Order, OrderItem, User
 
 
 def get_order_costs():
-    """Query database to get total cost per order."""
+    """Query database to get total cost per order as DataFrame."""
     with SessionLocal() as session:
-        results = session.query(
+        orders = session.query(
             Order.id,
             func.sum(OrderItem.quantity * OrderItem.price).label('total_cost')
         ).join(OrderItem).group_by(Order.id).all()
-    return results
-
-
-def orders_to_df(orders):
-    """Convert order query results to a pandas DataFrame."""
     return pd.DataFrame(orders, columns=["Order ID", "Total Cost"])
+
+
+def get_usernames():
+    """Query database to get all usernames as DF."""
+    with SessionLocal() as session:
+        users = session.query(
+            User.id, User.username
+        ).all()
+    return pd.DataFrame(users, columns=["User ID", "Username"])

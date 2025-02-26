@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import dash
 from dash import html, dcc
-from .charts import create_order_chart
+from .charts import create_order_chart, generate_users_table
 
 # Load environment variables
 load_dotenv()
@@ -17,5 +17,6 @@ app.secret_key = SECRET_KEY
 # Layout
 app.layout = html.Div([
     html.H1("Wild Rift Orders Dashboard"),
-    html.Div(id="table-container", children=create_order_chart())  # Calls chart function
+    html.Div(id="table-container", children=create_order_chart()),
+    html.Div(id="table-container", children=generate_users_table())
 ])

@@ -20,13 +20,14 @@ def run_dash():
 
 
 if __name__ == "__main__":
-    # Start Dash in a daemon thread so it stops when the script exits
-    dash_thread = threading.Thread(target=run_dash, daemon=True)
-    dash_thread.start()
-
-    try:
-        main()  # Run FetchDAO logic
-        while True:  # Keep the main thread alive
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("\nShutting down gracefully...")
+    # Start Dash in a daemon thread, so it stops when the script exits
+    run_dash()
+    # dash_thread = threading.Thread(target=run_dash, daemon=True)
+    # dash_thread.start()
+    #
+    # try:
+    #     main()  # Run FetchDAO logic
+    #     while True:  # Keep the main thread alive
+    #         time.sleep(1)
+    # except KeyboardInterrupt:
+    #     print("\nShutting down gracefully...")

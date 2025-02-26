@@ -8,11 +8,11 @@ Intent: Run PostgreSQL in a Docker container and query it into a dashboard with 
 ## Modular Architecture
 This setup is akin to building a WarCraft or StarCraft base:
 
-This project represents a **Level 1 resource depot**—a standalone DB unit with a built-in dashboard and minimal CLI input.  
+This project represents a **Level 1 resource depot**—a standalone DB unit with a built-in dashboard.  
 To build more specialized or complex data depots, you can fork this project and expand upon it.
 
 **Separate projects that can interface with the depot:**
-- Advanced CLI or other manual input tools
+- Typer CLI or other manual input tools
 - Dedicated dashboard apps (including ones that aggregate multiple DBs)
 - RPA bots or automated data-gathering workers
 - API layers for online access
@@ -23,7 +23,7 @@ To build more specialized or complex data depots, you can fork this project and 
 2. **The Nest Planet:**  
    - **Pollen Depots (DB):** Stores pollen (data), with built-in honey refining (dashboard and analytics) for that depot's pollen.  
    - **Refinery (dedicated dashboard and analytics):** Refines honey more robustly, often aggregating pollen from multiple depots.  
-   - **Queen Control Panels:** Specialized interfaces for manual management of pollen depots (admin tools, query builders, etc.).  
+   - **Queen Control Panels:** Extra functionality for manual management of pollen depots (admin tools, query builders, etc.).  
 3. **Cyberspace Units:**  
    - **Barracks (bots):** Hatches squads of formics. They can be scouts, gatherers, web crawlers, IoT sensors, etc.  
    - **StarGates (API):** Pollen transporters floating in cyberspace, connecting different units across the hive and beyond.  
@@ -59,6 +59,12 @@ This project consists of **three main components**:
 - The **Dash app (`dashboard/`) fetches data** from `database/` via DAO queries.
 - `database/` handles **data retrieval, updates, and processing**.
 
+### DB Schema Explained
+There are 4 tables: User, Order, OrderItem, and Product. Entries in Product are fixed and represent "organizational capability".
+User represent customers. Each User has many orders and each order has many items.
+Think of it as each user putting items in a basket before cashing at the cashier.
+A basket and corresponding would-be receipt is the Order and the items bought listed on the receipt are OrderItem.
+
 ## Installation
 1. **Clone this repo:**
 ```bash
@@ -86,12 +92,12 @@ python app.py
 ```
 
 ## To run scripts inside packages
+> The builtin CLI input system would be just running the package functions.
+
 To run each `populate.py`'s functions:
-`python -m database.populate wipe_db`
-`python -m database.populate populate_fake_products`
-`python -m database.populate populate_db`
-To run `dashboard.py` script alone:
-`python -m dashboard.dashboard`
+- `python -m database.populate wipe_db`
+- `python -m database.populate populate_fake_products`
+- `python -m database.populate populate_db`
 
 # Ongoing Dashboard design
 - top paying customers
