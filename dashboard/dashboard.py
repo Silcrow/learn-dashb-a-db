@@ -3,7 +3,8 @@ from dotenv import load_dotenv
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
-from .charts import create_order_chart, generate_collapsible_table
+from .charts import create_order_chart, generate_collapsible_table, generate_total_revenue_card, \
+    generate_total_orders_card
 
 # Load environment variables
 load_dotenv()
@@ -18,6 +19,12 @@ app.secret_key = SECRET_KEY
 # Layout
 app.layout = html.Div([
     html.H1("Wild Rift Orders Dashboard"),
+    dbc.Container([
+                dbc.Row([
+                    dbc.Col(generate_total_revenue_card(), width=6),
+                    dbc.Col(generate_total_orders_card(), width=6),
+                ]),
+            ]),
     html.Div(id="table-container", children=create_order_chart()),
     dbc.Container([
             html.H3("Orders Overview"),

@@ -36,3 +36,17 @@ def get_users_with_orders():
                 })
 
     return pd.DataFrame(data, columns=["User ID", "Username", "Order ID", "Order Date", "Product", "Quantity", "Price"])
+
+
+def get_total_revenue():
+    """Calculate the total revenue from all orders."""
+    with SessionLocal() as session:
+        total_revenue = session.query(OrderItem.price).all()
+        return sum([item[0] for item in total_revenue])
+
+
+def get_total_orders():
+    """Get the total number of orders."""
+    with SessionLocal() as session:
+        total_orders = session.query(Order.id).count()
+        return total_orders

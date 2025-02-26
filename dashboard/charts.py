@@ -1,6 +1,9 @@
 import plotly.express as px
 from dash import dcc, html, dash_table
-from .queries import get_order_costs, get_users_with_orders
+import dash_bootstrap_components as dbc
+from dash import html
+
+from .queries import get_order_costs, get_users_with_orders, get_total_revenue, get_total_orders
 
 
 def create_order_chart():
@@ -46,3 +49,25 @@ def generate_collapsible_table():
         sort_action="native",
         page_size=10
     )
+
+
+def generate_total_revenue_card():
+    """Generate a KPI card displaying total revenue."""
+    total_revenue = get_total_revenue()
+    return dbc.Card([
+        dbc.CardBody([
+            html.H4("Total Revenue", className="card-title"),
+            html.H2(f"${total_revenue:,.2f}", className="card-text text-success"),
+        ])
+    ], className="shadow-sm p-3 mb-4 bg-white rounded")
+
+
+def generate_total_orders_card():
+    """Generate a KPI card displaying total orders."""
+    total_orders = get_total_orders()
+    return dbc.Card([
+        dbc.CardBody([
+            html.H4("Total Orders", className="card-title"),
+            html.H2(f"{total_orders:,}", className="card-text text-primary"),
+        ])
+    ], className="shadow-sm p-3 mb-4 bg-white rounded")
