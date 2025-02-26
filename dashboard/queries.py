@@ -2,7 +2,7 @@ from sqlalchemy import func
 import pandas as pd
 from sqlalchemy.orm import joinedload
 from database.database import SessionLocal
-from database.models import Order, OrderItem, User
+from database.models import Order, OrderItem, User, Product
 
 
 def get_order_costs():
@@ -20,7 +20,6 @@ def get_users_with_orders():
     with SessionLocal() as session:
         users = session.query(User).options(
             joinedload(User.orders).joinedload(Order.order_items).joinedload(OrderItem.product)).all()
-
     data = []
     for user in users:
         for order in user.orders:
@@ -34,7 +33,6 @@ def get_users_with_orders():
                     "Quantity": item.quantity,
                     "Price": item.price
                 })
-
     return pd.DataFrame(data, columns=["User ID", "Username", "Order ID", "Order Date", "Product", "Quantity", "Price"])
 
 
@@ -50,3 +48,19 @@ def get_total_orders():
     with SessionLocal() as session:
         total_orders = session.query(Order.id).count()
         return total_orders
+
+
+def get_bestselling_products():
+    """Query database to get bestselling products."""
+    with SessionLocal() as session:
+        bestselling_products = (
+            session.query(
+                Product.name,
+                func.sum(OrderItem.quantity).label("total_sold")
+            )
+            .join(OrderItem, Product.id == OrderItem.product_id)
+            .group_by(Product.id, Product.name)
+            .order_by(func.sum(OrderItem.quantity).desc())  # Sort from highest sales
+            .all()
+        )
+    return pd.DataFrame(bestselling_products, columns=["Product Name", "Total Sold"])

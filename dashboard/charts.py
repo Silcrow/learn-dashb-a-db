@@ -3,7 +3,7 @@ from dash import dcc, html, dash_table
 import dash_bootstrap_components as dbc
 from dash import html
 
-from .queries import get_order_costs, get_users_with_orders, get_total_revenue, get_total_orders
+from .queries import get_order_costs, get_users_with_orders, get_total_revenue, get_total_orders, get_bestselling_products
 
 
 def create_order_chart():
@@ -71,3 +71,15 @@ def generate_total_orders_card():
             html.H2(f"{total_orders:,}", className="card-text text-primary"),
         ])
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
+
+
+def generate_bestselling_products_chart():
+    fig = px.bar(
+        get_bestselling_products(),
+        x="Product Name",
+        y="Total Sold",
+        title="Bestsellers",
+        text_auto=True
+    )
+    fig.update_layout(xaxis_tickangle=-45)  # Rotate x-axis labels for readability
+    return dcc.Graph(figure=fig)

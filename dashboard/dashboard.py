@@ -4,7 +4,7 @@ import dash
 from dash import html
 import dash_bootstrap_components as dbc
 from .charts import create_order_chart, generate_collapsible_table, generate_total_revenue_card, \
-    generate_total_orders_card
+    generate_total_orders_card, generate_bestselling_products_chart
 
 # Load environment variables
 load_dotenv()
@@ -25,7 +25,8 @@ app.layout = html.Div([
                     dbc.Col(generate_total_orders_card(), width=6),
                 ]),
             ]),
-    html.Div(id="table-container", children=create_order_chart()),
+    html.H3("TODO: VIP donut chart"),
+    html.Div(id="table-container", children=generate_bestselling_products_chart()),
     dbc.Container([
             html.H3("Orders Overview"),
             generate_collapsible_table(),
