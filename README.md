@@ -100,9 +100,14 @@ To run each `populate.py`'s functions:
 - `python -m database.populate populate_db`
 
 # Ongoing Dashboard design
-- top paying customers
-- [ ] top selling products
-- [ ] what else?
 
+## Notes
+- [ ] Ideally I should get a hierarchical table where it only lists usernames. When I click, then the user's order appears.
+When I click an order, then its items appears. The current table does it lazily by listing every product ordered.
+You can work with that for bare functionality, by filtering each column. GPT says need `dash_ag_grid`, DBC, Dash callbacks, if I'll do it that way.
+- 
+
+## questions
+- `dash_table` (1) what's the Aa button in the filter bar, what does it do? What can the select button do?
 - [ ] You can run a script from the CLI as a package, so maybe no need Typer CLI.
 Just make a "control panel" script package.

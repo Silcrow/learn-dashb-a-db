@@ -1,8 +1,9 @@
 import os
 from dotenv import load_dotenv
 import dash
-from dash import html, dcc
-from .charts import create_order_chart, generate_users_table
+from dash import html
+import dash_bootstrap_components as dbc
+from .charts import create_order_chart, generate_collapsible_table
 
 # Load environment variables
 load_dotenv()
@@ -18,5 +19,8 @@ app.secret_key = SECRET_KEY
 app.layout = html.Div([
     html.H1("Wild Rift Orders Dashboard"),
     html.Div(id="table-container", children=create_order_chart()),
-    html.Div(id="table-container", children=generate_users_table())
+    dbc.Container([
+            html.H3("Orders Overview"),
+            generate_collapsible_table(),
+        ]),
 ])
