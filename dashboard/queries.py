@@ -61,3 +61,21 @@ def get_total_customers():
     with SessionLocal() as session:
         total_customers = session.query(User).count()  # Assuming User is the table with customer data
     return total_customers
+
+
+def get_total_spent_by_customers():
+    """Query the database to get total money spent by each customer."""
+    with SessionLocal() as session:
+        total_spent_by_customers = (
+            session.query(
+                User.username,  # Assuming 'name' is the customer's name
+                func.sum(OrderItem.price * OrderItem.quantity).label("total_spent")
+            )
+            .join(Order, Order.user_id == User.id)  # Assuming Order has 'user_id'
+            .join(OrderItem, Order.id == OrderItem.order_id)  # Assuming OrderItem is linked to Order
+            .group_by(User.id, User.username)  # Group by user to get total spent per customer
+            .order_by(func.sum(OrderItem.price * OrderItem.quantity).desc())  # Sort from highest spender
+            .all()
+        )
+    return pd.DataFrame(total_spent_by_customers, columns=["Customer Name", "Total Spent"])
+# TODO: feels like the sessions in each function can be encapsulated

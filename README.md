@@ -115,15 +115,19 @@ To run each `populate.py`'s functions:
 - `python -m database.populate populate_fake_products`
 - `python -m database.populate populate_db`
 
-# Ongoing Dashboard design
-
-## Notes
-- [ ] Ideally I should get a hierarchical table where it only lists usernames. When I click, then the user's order appears.
-When I click an order, then its items appears. The current table does it lazily by listing every product ordered.
-You can work with that for bare functionality, by filtering each column. GPT says need `dash_ag_grid`, DBC, Dash callbacks, if I'll do it that way.
-- 
-
-## questions
-- `dash_table` (1) what's the Aa button in the filter bar, what does it do? What can the select button do?
+# Appendix
+## Dashboard ongoing: could do / skipped
 - [ ] You can run a script from the CLI as a package, so maybe no need Typer CLI.
 Just make a "control panel" script package.
+- [ ] make bestseller / whalers chart toggleable
+- [ ] You can make a donut chart of whalers once you figure out the cutoff criteria.
+Right now I can just eyeball it coz there aren't many usernames.
+- [ ] Implement a bestsellers/spenders chart that adapts to the filtered rows in the orders overview table and 
+overlaps with the all-time data for comparison purposes.
+
+## Lessons learned from doing this project
+- Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
+- Implemented Infras for the DB: DAO, CRUD, Alembic ORM for schema migration, Faker Data, and loading dot env.
+- Implemented Infras for Dashboarding. Busywork code aside, the meat to practice further are:
+1. Writing SQLAlchemy SQL queries = learning to write those one-lines that goes into a python variable.
+2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.

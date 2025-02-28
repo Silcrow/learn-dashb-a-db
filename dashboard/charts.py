@@ -80,3 +80,20 @@ def generate_total_customers_card(total_customers):
             html.H2(f"{total_customers}", className="card-text text-info"),
         ])
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
+
+
+def generate_total_spent_by_customers_chart(df):
+    """Generate a bar chart of total money spent by each customer."""
+    fig = px.bar(
+        df,
+        x="Customer Name",  # x-axis for customer names
+        y="Total Spent",  # y-axis for the total amount spent
+        title="Whalers (Top Spenders)",
+        text_auto=True  # Show values on the bars
+    )
+    fig.update_layout(
+        xaxis_tickangle=-45,  # Rotate x-axis labels for readability
+        yaxis_title="Total Money Spent ($)",
+        xaxis_title="Customer Name"
+    )
+    return dcc.Graph(figure=fig)
