@@ -77,3 +77,25 @@ def get_total_spent_by_customers():
         )
     return pd.DataFrame(total_spent_by_customers, columns=["Customer Name", "Total Spent"])
 
+
+def get_top_spending_customers(threshold=50):
+    """Filter customers who make up at least 'threshold%' of total revenue. If 0, return all customers."""
+    df = get_total_spent_by_customers()  # Load DataFrame
+    total_revenue = df["Total Spent"].sum()  # Get total revenue
+
+    # Sort customers by spending (highest first)
+    df = df.sort_values("Total Spent", ascending=False)
+
+    # Compute cumulative revenue percentage
+    df["Cumulative Revenue"] = df["Total Spent"].cumsum()
+    df["Revenue %"] = (df["Cumulative Revenue"] / total_revenue) * 100
+
+    # If threshold is 0, return all customers
+    if threshold == 0:
+        return df
+
+    # Find the first row where cumulative revenue exceeds the threshold
+    idx = (df["Revenue %"] >= threshold).idxmax()
+
+    # Ensure we include at least one more customer beyond the threshold
+    return df.iloc[:idx + 1]

@@ -7,7 +7,7 @@ from .charts import generate_collapsible_table, generate_total_revenue_card, \
     generate_total_orders_card, generate_bestselling_products_chart, generate_total_customers_card, \
     generate_total_spent_by_customers_chart
 from .queries import get_bestselling_products, get_total_orders, get_total_revenue, get_users_with_orders, \
-    get_total_customers, get_total_spent_by_customers
+    get_total_customers, get_total_spent_by_customers, get_top_spending_customers
 
 # Load environment variables
 load_dotenv()
@@ -19,6 +19,7 @@ if SECRET_KEY is None:
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.secret_key = SECRET_KEY
 
+# Layout
 app.layout = html.Div([
     html.H1("Wild Rift Orders Dashboard"),
 
@@ -27,7 +28,8 @@ app.layout = html.Div([
         dbc.Row([
             dbc.Col(generate_total_revenue_card(get_total_orders())),
             dbc.Col(generate_total_orders_card(get_total_revenue())),
-            dbc.Col(generate_total_customers_card(get_total_customers()))
+            dbc.Col(generate_total_customers_card(get_total_customers())),
+            dbc.Col(generate_total_customers_card(len(get_top_spending_customers())))
         ])
     ]),
 
@@ -46,8 +48,10 @@ app.layout = html.Div([
 ])
 # Layout
 
-# TODO cutoff whalers via all customers that make up 50% of revenue. Make donut.
-# TODO fix total revenue calculation
+
+# TODO make donut
+# color bar chart accordingly
+# TODO encapsulate KPI card charting
 # TODO make sankey
 # TODO make sankey and donut dynamic upon user's set of 0-100.
 
