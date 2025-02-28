@@ -26,11 +26,10 @@ def get_users_with_orders():
     return pd.DataFrame(data, columns=["User ID", "Username", "Order ID", "Order Date", "Product", "Quantity", "Price"])
 
 
-def get_total_revenue():
-    """Calculate the total revenue from all orders."""
-    with SessionLocal() as session:
-        total_revenue = session.query(OrderItem.price).all()
-        return sum([item[0] for item in total_revenue])
+def get_total_revenue_from_df():
+    """Calculate total revenue using Pandas."""
+    df = get_users_with_orders()
+    return (df["Price"] * df["Quantity"]).sum()
 
 
 def get_total_orders():
@@ -38,6 +37,13 @@ def get_total_orders():
     with SessionLocal() as session:
         total_orders = session.query(Order.id).count()
         return total_orders
+
+
+def get_total_customers():
+    """Query the database to get the total number of customers."""
+    with SessionLocal() as session:
+        total_customers = session.query(User).count()  # Assuming User is the table with customer data
+    return total_customers
 
 
 def get_bestselling_products():
@@ -56,13 +62,6 @@ def get_bestselling_products():
     return pd.DataFrame(bestselling_products, columns=["Product Name", "Total Sold"])
 
 
-def get_total_customers():
-    """Query the database to get the total number of customers."""
-    with SessionLocal() as session:
-        total_customers = session.query(User).count()  # Assuming User is the table with customer data
-    return total_customers
-
-
 def get_total_spent_by_customers():
     """Query the database to get total money spent by each customer."""
     with SessionLocal() as session:
@@ -78,4 +77,4 @@ def get_total_spent_by_customers():
             .all()
         )
     return pd.DataFrame(total_spent_by_customers, columns=["Customer Name", "Total Spent"])
-# TODO: feels like the sessions in each function can be encapsulated
+

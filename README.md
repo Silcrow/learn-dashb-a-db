@@ -122,6 +122,7 @@ Just make a "control panel" script package.
 - [ ] make bestseller / whalers chart toggleable
 - [ ] You can make a donut chart of whalers once you figure out the cutoff criteria.
 Right now I can just eyeball it coz there aren't many usernames.
+- [ ] maybe change both bar charts into tree bark maps (you'll see proportion of products/spenders from total revenue)
 - [ ] Implement a bestsellers/spenders chart that adapts to the filtered rows in the orders overview table and 
 overlaps with the all-time data for comparison purposes.
 
@@ -129,5 +130,5 @@ overlaps with the all-time data for comparison purposes.
 - Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
 - Implemented Infras for the DB: DAO, CRUD, Alembic ORM for schema migration, Faker Data, and loading dot env.
 - Implemented Infras for Dashboarding. Busywork code aside, the meat to practice further are:
-1. Writing SQLAlchemy SQL queries = learning to write those one-lines that goes into a python variable.
-2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.
+  1. Writing SQLAlchemy SQL queries = learning to write those one-lines that goes into a python variable.
+  2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.
