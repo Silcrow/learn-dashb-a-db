@@ -54,3 +54,10 @@ def get_bestselling_products():
             .all()
         )
     return pd.DataFrame(bestselling_products, columns=["Product Name", "Total Sold"])
+
+
+def get_total_customers():
+    """Query the database to get the total number of customers."""
+    with SessionLocal() as session:
+        total_customers = session.query(User).count()  # Assuming User is the table with customer data
+    return total_customers

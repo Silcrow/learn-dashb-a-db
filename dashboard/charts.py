@@ -71,4 +71,12 @@ def generate_bestselling_products_chart(bestselling_products):
     fig.update_layout(xaxis_tickangle=-45)  # Rotate x-axis labels for readability
     return dcc.Graph(figure=fig)
 
-# TODO write these functions with df inputs, and put in the df at the dashboard.py
+
+def generate_total_customers_card(total_customers):
+    """Generate a KPI card displaying total customers."""
+    return dbc.Card([
+        dbc.CardBody([
+            html.H4("Total Customers", className="card-title"),
+            html.H2(f"{total_customers}", className="card-text text-info"),
+        ])
+    ], className="shadow-sm p-3 mb-4 bg-white rounded")
