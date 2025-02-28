@@ -65,7 +65,7 @@ def generate_bestselling_products_chart(bestselling_products):
         bestselling_products,
         x="Product Name",
         y="Total Sold",
-        title="Bestsellers",
+        title="Bestseller Products",
         text_auto=True
     )
     fig.update_layout(xaxis_tickangle=-45)  # Rotate x-axis labels for readability
@@ -88,7 +88,7 @@ def generate_total_spent_by_customers_chart(df):
         df,
         x="Customer Name",  # x-axis for customer names
         y="Total Spent",  # y-axis for the total amount spent
-        title="Whalers (Top Spenders)",
+        title="Whales (Top Spenders)",
         text_auto=True  # Show values on the bars
     )
     fig.update_layout(

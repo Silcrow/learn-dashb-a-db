@@ -130,5 +130,6 @@ overlaps with the all-time data for comparison purposes.
 - Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
 - Implemented Infras for the DB: DAO, CRUD, Alembic ORM for schema migration, Faker Data, and loading dot env.
 - Implemented Infras for Dashboarding. Busywork code aside, the meat to practice further are:
-  1. Writing SQLAlchemy SQL queries = learning to write those one-lines that goes into a python variable.
+  1. Writing SQLAlchemy queries = learning to write those one-lines that goes into a python variable.
+This means learning raw SQL would be useless, since SQLAlchemy is pythonic like calling model objects.
   2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.

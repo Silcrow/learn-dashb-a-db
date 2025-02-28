@@ -26,17 +26,16 @@ def get_users_with_orders():
     return pd.DataFrame(data, columns=["User ID", "Username", "Order ID", "Order Date", "Product", "Quantity", "Price"])
 
 
-def get_total_revenue_from_df():
+def get_total_revenue():
     """Calculate total revenue using Pandas."""
     df = get_users_with_orders()
     return (df["Price"] * df["Quantity"]).sum()
 
 
 def get_total_orders():
-    """Get the total number of orders."""
-    with SessionLocal() as session:
-        total_orders = session.query(Order.id).count()
-        return total_orders
+    """Calculate the total number of unique orders from the DataFrame."""
+    df = get_users_with_orders()
+    return df["Order ID"].nunique()
 
 
 def get_total_customers():
