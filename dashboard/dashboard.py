@@ -3,9 +3,8 @@ from dotenv import load_dotenv
 import dash
 from dash import html
 import dash_bootstrap_components as dbc
-from .charts import generate_collapsible_table, generate_total_revenue_card, \
-    generate_total_orders_card, generate_bestselling_products_chart, \
-    generate_total_spent_by_customers_chart, generate_total_customers_card
+from .charts import generate_collapsible_table, generate_bestselling_products_chart, \
+    generate_total_spent_by_customers_chart, generate_total_customers_card, generate_kpi_card
 from .queries import get_bestselling_products, get_total_orders, get_total_revenue, get_users_with_orders, \
     get_total_customers, get_total_spent_by_customers, get_top_spending_customers
 
@@ -26,8 +25,8 @@ app.layout = html.Div([
     # KPI Cards - Total Revenue, Total Orders, Total Customers
     dbc.Container([
         dbc.Row([
-            dbc.Col(generate_total_orders_card(get_total_orders())),
-            dbc.Col(generate_total_revenue_card(get_total_revenue())),
+            dbc.Col(generate_kpi_card("Total Orders", get_total_orders())),
+            dbc.Col(generate_kpi_card("Total Revenue", get_total_revenue())),
             dbc.Col(generate_total_customers_card(get_total_customers(), len(get_top_spending_customers()))),
         ])
     ]),

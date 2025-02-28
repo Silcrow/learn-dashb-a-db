@@ -26,22 +26,12 @@ def generate_collapsible_table(df):
     )
 
 
-def generate_total_revenue_card(total_revenue):
-    """Generate a KPI card displaying total revenue."""
+def generate_kpi_card(title, value):
+    """Generate a KPI card displaying title and value."""
     return dbc.Card([
         dbc.CardBody([
-            html.H4("Total Revenue", className="card-title"),
-            html.H2(f"${total_revenue:,.2f}", className="card-text text-success"),
-        ])
-    ], className="shadow-sm p-3 mb-4 bg-white rounded")
-
-
-def generate_total_orders_card(total_orders):
-    """Generate a KPI card displaying total orders."""
-    return dbc.Card([
-        dbc.CardBody([
-            html.H4("Total Orders", className="card-title"),
-            html.H2(f"{total_orders:,}", className="card-text text-primary"),
+            html.H4(f"{title}", className="card-title"),
+            html.H2(f"${value}", className="card-text text-success"),
         ])
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
 
