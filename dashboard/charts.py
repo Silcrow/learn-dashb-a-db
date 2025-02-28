@@ -1,17 +1,7 @@
 import plotly.express as px
-from dash import dcc, html, dash_table
+from dash import dcc, dash_table
 import dash_bootstrap_components as dbc
 from dash import html
-
-from .queries import get_order_costs, get_users_with_orders, get_total_revenue, get_total_orders, get_bestselling_products
-
-
-def create_order_chart():
-    """Generate bar chart for total order costs."""
-    df = get_order_costs()
-    return html.Div([
-        dcc.Graph(figure=px.bar(df, x="Order ID", y="Total Cost", title="Total Order Costs"))
-    ])
 
 
 def generate_table(dataframe, max_rows=10):
@@ -28,9 +18,7 @@ def generate_table(dataframe, max_rows=10):
     ])
 
 
-def generate_collapsible_table():
-    df = get_users_with_orders()
-
+def generate_collapsible_table(df):
     return dash_table.DataTable(
         id="orders-table",
         columns=[
@@ -51,9 +39,8 @@ def generate_collapsible_table():
     )
 
 
-def generate_total_revenue_card():
+def generate_total_revenue_card(total_revenue):
     """Generate a KPI card displaying total revenue."""
-    total_revenue = get_total_revenue()
     return dbc.Card([
         dbc.CardBody([
             html.H4("Total Revenue", className="card-title"),
@@ -62,9 +49,8 @@ def generate_total_revenue_card():
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
 
 
-def generate_total_orders_card():
+def generate_total_orders_card(total_orders):
     """Generate a KPI card displaying total orders."""
-    total_orders = get_total_orders()
     return dbc.Card([
         dbc.CardBody([
             html.H4("Total Orders", className="card-title"),
@@ -73,9 +59,10 @@ def generate_total_orders_card():
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
 
 
-def generate_bestselling_products_chart():
+def generate_bestselling_products_chart(bestselling_products):
+    """Generate a bestsellers bar chart from df."""
     fig = px.bar(
-        get_bestselling_products(),
+        bestselling_products,
         x="Product Name",
         y="Total Sold",
         title="Bestsellers",
@@ -83,3 +70,5 @@ def generate_bestselling_products_chart():
     )
     fig.update_layout(xaxis_tickangle=-45)  # Rotate x-axis labels for readability
     return dcc.Graph(figure=fig)
+
+# TODO write these functions with df inputs, and put in the df at the dashboard.py

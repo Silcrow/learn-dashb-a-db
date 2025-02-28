@@ -55,9 +55,25 @@ This project consists of **three main components**:
    - `populate.py` → Populates the database with **sample data**.
 
 ### **How They Work Together**
-- `app.py` **imports** both `database/` (for querying) and `dashboard/` (for visualization).
-- The **Dash app (`dashboard/`) fetches data** from `database/` via DAO queries.
-- `database/` handles **data retrieval, updates, and processing**.
+
+- `app.py` imports `database/` for querying and `dashboard/` for visualization.
+- `dashboard/` dash app fetches data from `database/` via DAO queries.
+- `database/` handles data CRUD.
+
+```sh
+app.py
+ │
+ ├──▶ database/    # Handles queries, updates
+ │       └──▶ DAO Queries → Data
+ │
+ └──▶ dashboard/   # Dash App for visualization
+         └──▶ Fetches data from database/
+```
+`dashboard/`:
+```
+SQL database → `queries` → df
+df → `charts` → dash charts
+```
 
 ### DB Schema Explained
 There are 4 tables: User, Order, OrderItem, and Product. Entries in Product are fixed and represent "organizational capability".

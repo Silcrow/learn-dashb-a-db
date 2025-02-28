@@ -5,16 +5,6 @@ from database.database import SessionLocal
 from database.models import Order, OrderItem, User, Product
 
 
-def get_order_costs():
-    """Query database to get total cost per order as DataFrame."""
-    with SessionLocal() as session:
-        orders = session.query(
-            Order.id,
-            func.sum(OrderItem.quantity * OrderItem.price).label('total_cost')
-        ).join(OrderItem).group_by(Order.id).all()
-    return pd.DataFrame(orders, columns=["Order ID", "Total Cost"])
-
-
 def get_users_with_orders():
     """Query database to get all users and their orders."""
     with SessionLocal() as session:
