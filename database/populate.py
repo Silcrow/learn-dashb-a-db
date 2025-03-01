@@ -1,10 +1,14 @@
+import argparse
+
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from faker import Faker
 import random
-from dao import UserDAO, ProductDAO, OrderDAO, OrderItemDAO  # Import your DAO classes
-from database import SessionLocal
-from models import User, Product, Order, OrderItem
+
+# Import DAO classes
+from .dao import OrderItemDAO, UserDAO, OrderDAO
+from .models import Product
+from .database import SessionLocal
 
 fake = Faker()
 
@@ -142,9 +146,26 @@ def wipe_database_with_sql():
     wipe_session.close()
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Populate the database with fake data.")
+    parser.add_argument(
+        "action",
+        choices=["populate_products", "populate_db", "wipe_db"],
+        help="The action to perform"
+    )
+
+    args = parser.parse_args()
+
+    # Create a session
+    with SessionLocal() as session:
+        if args.action == "populate_products":
+            populate_fake_products(session)
+        elif args.action == "populate_db":
+            populate_db()  # Assuming populate_db is defined elsewhere
+        elif args.action == "wipe_db":
+            wipe_database_with_sql()
+
+
 if __name__ == "__main__":
-    # with SessionLocal() as session:
-    #     populate_fake_products(session)
-    populate_db()  # You can uncomment this to populate users and orders
-    # wipe_database_with_sql()
+    main()
 

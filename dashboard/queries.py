@@ -1,0 +1,101 @@
+from sqlalchemy import func
+import pandas as pd
+from sqlalchemy.orm import joinedload
+from database.database import SessionLocal
+from database.models import Order, OrderItem, User, Product
+
+
+def get_users_with_orders():
+    """Query database to get all users and their orders."""
+    with SessionLocal() as session:
+        users = session.query(User).options(
+            joinedload(User.orders).joinedload(Order.order_items).joinedload(OrderItem.product)).all()
+    data = []
+    for user in users:
+        for order in user.orders:
+            for item in order.order_items:
+                data.append({
+                    "User ID": user.id,
+                    "Username": user.username,
+                    "Order ID": order.id,
+                    "Order Date": order.order_date.strftime("%Y-%m-%d"),
+                    "Product": item.product.name,
+                    "Quantity": item.quantity,
+                    "Price": item.price
+                })
+    return pd.DataFrame(data, columns=["User ID", "Username", "Order ID", "Order Date", "Product", "Quantity", "Price"])
+
+
+def get_total_revenue():
+    """Calculate total revenue using Pandas."""
+    df = get_users_with_orders()
+    return (df["Price"] * df["Quantity"]).sum()
+
+
+def get_total_orders():
+    """Calculate the total number of unique orders from the DataFrame."""
+    df = get_users_with_orders()
+    return df["Order ID"].nunique()
+
+
+def get_total_customers():
+    """Query the database to get the total number of customers."""
+    with SessionLocal() as session:
+        total_customers = session.query(User).count()  # Assuming User is the table with customer data
+    return total_customers
+
+
+def get_bestselling_products():
+    """Query database to get bestselling products."""
+    with SessionLocal() as session:
+        bestselling_products = (
+            session.query(
+                Product.name,
+                func.sum(OrderItem.quantity).label("total_sold")
+            )
+            .join(OrderItem, Product.id == OrderItem.product_id)
+            .group_by(Product.id, Product.name)
+            .order_by(func.sum(OrderItem.quantity).desc())  # Sort from highest sales
+            .all()
+        )
+    return pd.DataFrame(bestselling_products, columns=["Product Name", "Total Sold"])
+
+
+def get_total_spent_by_customers():
+    """Query the database to get total money spent by each customer."""
+    with SessionLocal() as session:
+        total_spent_by_customers = (
+            session.query(
+                User.username,  # Assuming 'name' is the customer's name
+                func.sum(OrderItem.price * OrderItem.quantity).label("total_spent")
+            )
+            .join(Order, Order.user_id == User.id)  # Assuming Order has 'user_id'
+            .join(OrderItem, Order.id == OrderItem.order_id)  # Assuming OrderItem is linked to Order
+            .group_by(User.id, User.username)  # Group by user to get total spent per customer
+            .order_by(func.sum(OrderItem.price * OrderItem.quantity).desc())  # Sort from highest spender
+            .all()
+        )
+    return pd.DataFrame(total_spent_by_customers, columns=["Customer Name", "Total Spent"])
+
+
+def get_top_spending_customers(threshold=50):
+    """Filter customers who make up at least 'threshold%' of total revenue. If 0, return all customers."""
+    df = get_total_spent_by_customers()  # Load DataFrame
+    total_revenue = df["Total Spent"].sum()  # Get total revenue
+
+    # Sort customers by spending (highest first)
+    df = df.sort_values("Total Spent", ascending=False)
+
+    # Compute cumulative revenue percentage
+    df["Cumulative Revenue"] = df["Total Spent"].cumsum()
+    df["Revenue %"] = (df["Cumulative Revenue"] / total_revenue) * 100
+
+    # If threshold is 0, return all customers
+    if threshold == 0:
+        return df
+
+    # Find the first row where cumulative revenue exceeds the threshold
+    idx = (df["Revenue %"] >= threshold).idxmax()
+
+    # Ensure we include at least one more customer beyond the threshold
+    return df.iloc[:idx + 1]

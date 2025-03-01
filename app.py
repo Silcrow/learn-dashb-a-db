@@ -1,30 +1,33 @@
-from dao import FetchDAO
-from database import SessionLocal
-from dashboard import app
+from database.dao import FetchDAO
+from database.database import SessionLocal
+from dashboard.dashboard import app
 import threading
+import time
 
 
 def main():
+    """ Main logic: FetchDAO-related operations. """
     session = SessionLocal()
     try:
-        # Fetch and display sample data
         FetchDAO.fetch_data(session)
     finally:
         session.close()
 
 
 def run_dash():
-    # Start the Dash app in a separate thread
-    app.run_server(debug=True, use_reloader=False)  # `use_reloader=False` to avoid running twice
+    """ Run the Dash app. """
+    app.run_server(debug=True, use_reloader=False)  # `use_reloader=False` prevents duplicate execution
 
 
 if __name__ == "__main__":
-    # Run both the Dash app and FetchDAO logic concurrently
-    dash_thread = threading.Thread(target=run_dash)
-    dash_thread.start()
-
-    # Run the original main logic (FetchDAO)
-    main()
-
-    # Ensure the Dash app keeps running in the background
-    dash_thread.join()
+    # Start Dash in a daemon thread, so it stops when the script exits
+    run_dash()
+    # dash_thread = threading.Thread(target=run_dash, daemon=True)
+    # dash_thread.start()
+    #
+    # try:
+    #     main()  # Run FetchDAO logic
+    #     while True:  # Keep the main thread alive
+    #         time.sleep(1)
+    # except KeyboardInterrupt:
+    #     print("\nShutting down gracefully...")
