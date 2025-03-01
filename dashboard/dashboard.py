@@ -26,8 +26,12 @@ app.layout = html.Div([
     dbc.Container([
         dbc.Row([
             dbc.Col(generate_kpi_card("Total Orders", get_total_orders())),
-            dbc.Col(generate_kpi_card("Total Revenue", get_total_revenue())),
-            dbc.Col(generate_total_customers_card(get_total_customers(), len(get_top_spending_customers()))),
+            dbc.Col(generate_kpi_card("Total Revenue", f"${get_total_revenue()}")),
+            dbc.Col(
+                # Ensure the ID for the total customers card matches the output in the callback
+                html.Div(id="total-customers-card", children=generate_total_customers_card(
+                    get_total_customers(), len(get_top_spending_customers())))
+            ),
         ])
     ]),
 
@@ -55,13 +59,26 @@ app.layout = html.Div([
     ]),
 ])
 
+
 # CALLBACK: Update the chart when the slider value changes
-@callback(
-    Output("total-spent-chart-container", "children"),
-    Input("threshold-slider", "value")
+@app.callback(
+    [
+        Output("total-spent-chart-container", "children"),
+        Output("total-customers-card", "children"),  # Add output for the customer card
+    ],
+    [Input("threshold-slider", "value")]
 )
-def update_chart(threshold):
-    """Update the chart dynamically based on the threshold slider."""
-    df = get_total_spent_by_customers()  # Get all customers
-    filtered_df = get_top_spending_customers(threshold)  # Apply threshold filter
-    return generate_total_spent_by_customers_chart(df, filtered_df)  # Update chart
+def update_content(threshold):
+    # Get the top spending customers based on the threshold
+    filtered_customers = get_top_spending_customers(threshold)
+
+    # Generate the updated chart
+    chart = generate_total_spent_by_customers_chart(get_total_spent_by_customers(), filtered_customers)
+
+    # Update the total customers card with the new threshold value
+    total_customers = get_total_customers()
+    top_customers = len(filtered_customers)
+    total_customers_card = generate_total_customers_card(total_customers, top_customers)
+
+    return chart, total_customers_card
+

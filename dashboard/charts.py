@@ -31,7 +31,7 @@ def generate_kpi_card(title, value):
     return dbc.Card([
         dbc.CardBody([
             html.H4(f"{title}", className="card-title"),
-            html.H2(f"${value}", className="card-text text-success"),
+            html.H2(f"{value}", className="card-text text-success"),
         ])
     ], className="shadow-sm p-3 mb-4 bg-white rounded")
 
