@@ -125,6 +125,9 @@ Right now I can just eyeball it coz there aren't many usernames.
 - [ ] maybe change both bar charts into tree bark maps (you'll see proportion of products/spenders from total revenue)
 - [ ] Implement a bestsellers/spenders chart that adapts to the filtered rows in the orders overview table and 
 overlaps with the all-time data for comparison purposes.
+### more could do next
+- [ ] dockerizing BE for production
+- [ ] how to migrate this localhost DB to a cloud DB (workplace reality)
 
 ## Lessons learned from doing this project
 1. Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
