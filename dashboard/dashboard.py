@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 import dash
-from dash import html
+from dash import html, dcc, Output, Input, callback
 import dash_bootstrap_components as dbc
 from .charts import generate_collapsible_table, generate_bestselling_products_chart, \
     generate_total_spent_by_customers_chart, generate_total_customers_card, generate_kpi_card
@@ -30,9 +30,21 @@ app.layout = html.Div([
             dbc.Col(generate_total_customers_card(get_total_customers(), len(get_top_spending_customers()))),
         ])
     ]),
-    # Add the "Total Money Spent by Customers" Chart
+
+    # Slider to adjust threshold
+    html.Div([
+        html.Label("Select Spending Threshold:"),
+        dcc.Slider(
+            id="threshold-slider",
+            min=0, max=100, step=5,
+            value=50,  # Default threshold
+            marks={i: f"{i}%" for i in range(0, 110, 10)}
+        ),
+    ], style={"margin": "20px"}),
+    # Chart Container - Updated dynamically
     html.Div(id="total-spent-chart-container", children=generate_total_spent_by_customers_chart(
         get_total_spent_by_customers(), get_top_spending_customers())),
+
     # Add the "Bestselling Products" Chart
     html.Div(id="table-container", children=generate_bestselling_products_chart(get_bestselling_products())),
 
@@ -41,11 +53,15 @@ app.layout = html.Div([
         html.H3("Orders Overview"),
         generate_collapsible_table(get_users_with_orders()),
     ]),
-    # html.Div(id="total-spent-chart-container", children=generate_spender_product_sankey()),
 ])
-# Layout
 
-
-# TODO encapsulate KPI card charting
-# TODO make sankey
-# TODO make sankey and donut dynamic upon user's set of 0-100.
+# CALLBACK: Update the chart when the slider value changes
+@callback(
+    Output("total-spent-chart-container", "children"),
+    Input("threshold-slider", "value")
+)
+def update_chart(threshold):
+    """Update the chart dynamically based on the threshold slider."""
+    df = get_total_spent_by_customers()  # Get all customers
+    filtered_df = get_top_spending_customers(threshold)  # Apply threshold filter
+    return generate_total_spent_by_customers_chart(df, filtered_df)  # Update chart

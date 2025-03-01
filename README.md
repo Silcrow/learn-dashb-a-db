@@ -127,9 +127,17 @@ Right now I can just eyeball it coz there aren't many usernames.
 overlaps with the all-time data for comparison purposes.
 
 ## Lessons learned from doing this project
-- Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
-- Implemented Infras for the DB: DAO, CRUD, Alembic ORM for schema migration, Faker Data, and loading dot env.
-- Implemented Infras for Dashboarding. Busywork code aside, the meat to practice further are:
-  1. Writing SQLAlchemy queries = learning to write those one-lines that goes into a python variable.
-This means learning raw SQL would be useless, since SQLAlchemy is pythonic like calling model objects.
-  2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.
+1. Setup PostgreSQL in Docker with SQLAlchemy and initialized tables
+2. Implemented Infras for the DB: DAO, CRUD, Alembic ORM for schema migration, Faker Data, and loading dot env.
+3. Implemented Infras for Dashboarding. Busywork code aside, the meat to practice further are:
+   1. Writing SQLAlchemy queries = learning to write those one-lines that goes into a python variable.
+   This means learning raw SQL would be useless, since SQLAlchemy is pythonic like calling model objects.
+   2. Trying more kinds of Dash charts, including advanced topics like callbacks and dynamic UIs.
+4. Added some basic dashboard components:
+   1. [KPI card](https://github.com/Silcrow/learn-dashb-a-db/commit/b5185fa5d62d967b91905c2258c1612537cf5017) (easy)
+   2. [collapsible table](https://github.com/Silcrow/learn-dashb-a-db/commit/645c07726103d66b2f089ffb28e98c04a0dbfd47#diff-cdc1cbda46dc4e05f73d5131ccc477279b71c99adb92241beda2eba5652b2e20)
+   3. [bestselling products chart](https://github.com/Silcrow/learn-dashb-a-db/commit/cf037787a1199e5fae6e33c6e4a708ea109e34f1)
+   4. [top spenders chart](https://github.com/Silcrow/learn-dashb-a-db/commit/cb21a754b65fd43d3f99697ddbf95b07bf4eb80a)
+      1. Modify query to [filter for top spenders](https://github.com/Silcrow/learn-dashb-a-db/commit/dd11b4e1f55b888d17b14c8e5c11eb3a45bf78e6)
+      2. [split bar](https://github.com/Silcrow/learn-dashb-a-db/commit/a62d019de310c49089ed6b36f3c776c58132d158) (donut chart equivalent)
+      3. slider mechanism with callback
