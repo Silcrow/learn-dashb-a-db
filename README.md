@@ -18,15 +18,46 @@ source venv/bin/activate # on Mac
 ```shell
 pip install -r requirements.txt
 ```
-Create a `.env` file with:
+4. Create a `.env` file in the project root with:
 ```ini
-SECRET_KEY=<your-secret-key>
-DB_URL=<your-database-url>
+SECRET_KEY=your-secret-key-here-can-be-anything-random
+DB_URL=postgresql://user:password@localhost:5433/mydatabase
 ```
-Run the app:
-```shell
-python app.py
-```
+**Note:** The `SECRET_KEY` can be any random string. The `DB_URL` uses credentials from `docker-compose.yml`:
+- User: `user`
+- Password: `password`
+- Host: `localhost`
+- Port: `5433` (mapped from container's 5432)
+- Database: `mydatabase`
+
+5. **Start the PostgreSQL database:**
+   - Open **Docker Desktop** (make sure it's running)
+   - Start the database container:
+   ```shell
+   docker-compose up -d
+   ```
+   - Verify it's running:
+   ```shell
+   docker ps
+   ```
+   You should see `postgres_db` container running.
+
+6. **Initialize the database schema:**
+   ```shell
+   alembic upgrade head
+   ```
+
+7. **Populate the database with sample data:**
+   ```shell
+   python -m database.populate populate_fake_products
+   python -m database.populate populate_db
+   ```
+
+8. **Run the dashboard:**
+   ```shell
+   python app.py
+   ```
+   Open your browser to `http://127.0.0.1:8050`
 
 - [ ] I also got the issue where my app has 2 entry points (on commented out). Do I make readme instructions on that, or edit the code? (editing the code complicates the codebase), but if I write instructions, it has to be obvious to a zero-day.
 
